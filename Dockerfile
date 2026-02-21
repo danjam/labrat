@@ -42,9 +42,13 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 # Create non-root user
 RUN useradd -m -s /bin/bash claude
 
-# Install Claude Code via official native installer
+# Install Claude Code via official native installer as the claude user
+# Installs to ~/.local/bin/claude
 # https://code.claude.com/docs/en/setup
+USER claude
 RUN curl -fsSL https://claude.ai/install.sh | bash
+USER root
+ENV PATH="/home/claude/.local/bin:$PATH"
 
 # Install Yep Anywhere (web UI for Claude Code sessions)
 # https://github.com/kzahel/yepanywhere

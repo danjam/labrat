@@ -34,7 +34,7 @@ volumes:
 docker compose up -d
 ```
 
-Open `http://<your-server>:3400` in a browser.
+Labrat serves HTTP on port 3400. You'll need a **reverse proxy with HTTPS** (e.g., Traefik, Caddy, nginx) in front of it — Yep Anywhere uses WebSockets, and browsers require a secure connection for that over the internet. Set `ALLOWED_HOSTS` to your domain so Yep accepts requests through the proxy.
 
 The image is rebuilt weekly to keep Claude Code up to date. Run `docker compose pull && docker compose up -d` to update.
 

@@ -43,5 +43,5 @@ The `claude-home` named volume persists auth state and session history at `/home
 
 - `Dockerfile` — container image definition
 - `entrypoint.sh` — secrets resolution, permission fixes, auth detection, privilege drop
-- `docker-compose.yml` — local build + run config
+- `compose.yaml` — local build + run config
 - `.github/workflows/build.yml` — GHCR publish workflow (for later)

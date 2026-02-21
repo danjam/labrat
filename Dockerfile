@@ -44,7 +44,7 @@ RUN useradd -m -s /bin/bash claude
 
 # Install Claude Code via official native installer
 # https://code.claude.com/docs/en/setup
-RUN curl -fsSL https://claude.ai/install.sh | sh
+RUN curl -fsSL https://claude.ai/install.sh | bash
 
 # Install Yep Anywhere (web UI for Claude Code sessions)
 # https://github.com/kzahel/yepanywhere

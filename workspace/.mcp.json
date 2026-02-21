@@ -12,14 +12,6 @@
         "BRAVE_API_KEY": "${BRAVE_API_KEY}"
       }
     },
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${GITHUB_TOKEN}"
-      },
-      "description": "GitHub issues, PRs, and repository access"
-    },
     "ssh-session": {
       "type": "stdio",
       "command": "uvx",

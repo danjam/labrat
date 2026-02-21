@@ -64,13 +64,14 @@ ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_API_KEY_FILE=/run/secrets/anthropic_api_key
 ```
 
-Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`, `GEMINI_API_KEY`. To add more, edit the `SECRETS_WHITELIST` in `entrypoint.sh`.
+Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`, `GEMINI_API_KEY`, `YEP_PASSWORD`. To add more, edit the `SECRETS_WHITELIST` in `entrypoint.sh`.
 
 ## Configuration
 
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | `3400` | Host port for Yep Anywhere |
+| `YEP_PASSWORD` | | **Required.** Password for the Yep Anywhere web UI |
 | `ANTHROPIC_API_KEY` | | Claude API key (or use OAuth) |
 | `GITHUB_TOKEN` | | GitHub PAT for `gh` CLI |
 | `CONTEXT7_API_KEY` | | Context7 MCP server |

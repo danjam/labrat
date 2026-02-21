@@ -9,6 +9,7 @@ SECRETS_WHITELIST=(
     CONTEXT7_API_KEY
     BRAVE_API_KEY
     GEMINI_API_KEY
+    YEP_PASSWORD
 )
 
 for base_var in "${SECRETS_WHITELIST[@]}"; do
@@ -43,6 +44,17 @@ if [ -d /home/claude/.claude ]; then
 fi
 if [ -d /home/claude/workspace ]; then
     chown claude:claude /home/claude/workspace
+fi
+
+# --- Set up Yep Anywhere authentication ---
+YEP_AUTH_FILE="/home/claude/.yep-anywhere/auth.json"
+if [ -z "${YEP_PASSWORD:-}" ]; then
+    echo "ERROR: YEP_PASSWORD is required. Set it in .env to protect the web UI." >&2
+    exit 1
+fi
+if [ ! -f "$YEP_AUTH_FILE" ]; then
+    gosu claude yepanywhere --setup-auth "$YEP_PASSWORD"
+    echo "Yep Anywhere: authentication configured."
 fi
 
 # --- Check Claude Code authentication status ---

@@ -43,12 +43,13 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
 RUN useradd -m -s /bin/bash claude
 
 # Install Claude Code via official native installer as the claude user
-# Installs to ~/.local/bin/claude
+# The installer puts the binary at ~/.local/bin/claude, but /home/claude is
+# overlaid by a named volume at runtime, so copy it to a system-wide location.
 # https://code.claude.com/docs/en/setup
 USER claude
 RUN curl -fsSL https://claude.ai/install.sh | bash
 USER root
-ENV PATH="/home/claude/.local/bin:$PATH"
+RUN cp /home/claude/.local/bin/claude /usr/local/bin/claude
 
 # Install Yep Anywhere (web UI for Claude Code sessions)
 # https://github.com/kzahel/yepanywhere

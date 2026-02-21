@@ -1,0 +1,30 @@
+{
+  "mcpServers": {
+    "Context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp", "--api-key", "${CONTEXT7_API_KEY}"],
+      "description": "Documentation lookup"
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server", "--transport", "stdio"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      }
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      },
+      "description": "GitHub issues, PRs, and repository access"
+    },
+    "ssh-session": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": ["mcp-ssh-session"],
+      "description": "Persistent SSH session management with async commands and SFTP"
+    }
+  }
+}

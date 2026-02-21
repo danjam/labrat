@@ -1,0 +1,21 @@
+services:
+  claude:
+    build: .
+    ports:
+      - "${PORT:-3400}:3400"
+    volumes:
+      # Persist Claude Code auth, session history, and Yep Anywhere data
+      - claude-home:/home/claude
+      # Workspace — CLAUDE.md, .mcp.json, and any files Claude needs
+      - ./workspace:/home/claude/workspace
+    environment:
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      # MCP server API keys (referenced via ${VAR} in workspace/.mcp.json)
+      - CONTEXT7_API_KEY=${CONTEXT7_API_KEY:-}
+      - BRAVE_API_KEY=${BRAVE_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    restart: unless-stopped
+
+volumes:
+  claude-home:

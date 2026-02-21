@@ -46,6 +46,13 @@ if [ -d /home/claude/workspace ]; then
     chown claude:claude /home/claude/workspace
 fi
 
+# --- Ensure Claude Code projects directory exists ---
+# Yep Anywhere watches ~/.claude/projects/ to discover sessions.
+# On a fresh volume this directory doesn't exist, so the FileWatcher
+# skips it and the UI shows no projects.
+mkdir -p /home/claude/.claude/projects
+chown -R claude:claude /home/claude/.claude
+
 # --- Set up Yep Anywhere authentication ---
 YEP_AUTH_FILE="/home/claude/.yep-anywhere/auth.json"
 if [ -z "${YEP_PASSWORD:-}" ]; then

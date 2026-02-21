@@ -74,4 +74,4 @@ HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
 
 # Entrypoint runs as root to fix volume permissions, then drops to claude via gosu
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["yepanywhere"]
+CMD ["yepanywhere", "--host", "0.0.0.0"]

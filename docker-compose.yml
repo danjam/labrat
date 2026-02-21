@@ -12,6 +12,8 @@ services:
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       # Yep Anywhere web UI password (required)
       - YEP_PASSWORD=${YEP_PASSWORD}
+      # Allowed hostnames for Yep Anywhere (set when behind a reverse proxy)
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-}
       # MCP server API keys (referenced via ${VAR} in workspace/.mcp.json)
       - CONTEXT7_API_KEY=${CONTEXT7_API_KEY:-}
       - BRAVE_API_KEY=${BRAVE_API_KEY:-}

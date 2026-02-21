@@ -72,6 +72,7 @@ Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `CONTEXT7_API_
 |----------|---------|-------------|
 | `PORT` | `3400` | Host port for Yep Anywhere |
 | `YEP_PASSWORD` | | **Required.** Password for the Yep Anywhere web UI |
+| `ALLOWED_HOSTS` | | Allowed hostnames when behind a reverse proxy |
 | `ANTHROPIC_API_KEY` | | Claude API key (or use OAuth) |
 | `GITHUB_TOKEN` | | GitHub PAT for `gh` CLI |
 | `CONTEXT7_API_KEY` | | Context7 MCP server |

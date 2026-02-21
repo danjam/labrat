@@ -65,30 +65,20 @@ if [ ! -f "$YEP_AUTH_FILE" ]; then
 fi
 
 # --- Check Claude Code authentication status ---
-CLAUDE_HOME="/home/claude/.claude"
-AUTH_FOUND=false
-
 if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
     echo "Auth: API key configured via environment variable."
-    AUTH_FOUND=true
-elif [ -f "${CLAUDE_HOME}/credentials.json" ] || [ -f "${CLAUDE_HOME}/.credentials.json" ]; then
-    echo "Auth: OAuth credentials found in ${CLAUDE_HOME}."
-    AUTH_FOUND=true
-fi
-
-if [ "$AUTH_FOUND" = false ]; then
+else
     echo ""
     echo "============================================"
-    echo "  No Claude Code authentication detected."
+    echo "  No ANTHROPIC_API_KEY set."
     echo "============================================"
     echo ""
     echo "  Option 1: Set ANTHROPIC_API_KEY in .env"
     echo ""
     echo "  Option 2: Authenticate interactively (Pro/Max):"
-    echo "    docker exec -it \$(hostname) claude login"
+    echo "    Start a session in Yep Anywhere and"
+    echo "    use /login to authenticate with OAuth."
     echo ""
-    echo "  Yep Anywhere will start, but sessions will"
-    echo "  fail until authentication is configured."
     echo "============================================"
     echo ""
 fi

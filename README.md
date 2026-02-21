@@ -20,13 +20,7 @@ Open `http://<your-server>:3400` in a browser.
 
 **API key:** Set `ANTHROPIC_API_KEY` in `.env`. Done.
 
-**Claude Pro/Max (OAuth):** Leave `ANTHROPIC_API_KEY` blank, start the container, then:
-
-```bash
-docker exec -it labrat-claude-1 claude login
-```
-
-This is a one-time interactive flow. OAuth tokens persist in the `claude-home` volume across restarts.
+**Claude Pro/Max (OAuth):** Leave `ANTHROPIC_API_KEY` blank, start the container, open the Yep Anywhere UI, start a session, and use `/login` to authenticate. This is a one-time flow — OAuth tokens persist in the `claude-home` volume across restarts.
 
 ## Workspace
 

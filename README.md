@@ -8,13 +8,43 @@ Claude Code + [Yep Anywhere](https://github.com/kzahel/yepanywhere) in Docker fo
 
 ## Quick Start
 
+Create a `compose.yaml`:
+
+```yaml
+services:
+  labrat:
+    image: ghcr.io/danjam/labrat:latest
+    ports:
+      - "3400:3400"
+    volumes:
+      - claude-home:/home/claude
+      - ./workspace:/home/claude/workspace
+    environment:
+      - YEP_PASSWORD=changeme
+      # - ANTHROPIC_API_KEY=sk-ant-...
+      # - GITHUB_TOKEN=ghp_...
+      # - ALLOWED_HOSTS=labrat.example.com
+    restart: unless-stopped
+
+volumes:
+  claude-home:
+```
+
+```bash
+docker compose up -d
+```
+
+Open `http://<your-server>:3400` in a browser.
+
+The image is rebuilt weekly to keep Claude Code up to date. Run `docker compose pull && docker compose up -d` to update.
+
+## Building from Source
+
 ```bash
 git clone https://github.com/danjam/labrat.git && cd labrat
 cp .env.example .env              # Fill in API keys
 docker compose up -d --build
 ```
-
-Open `http://<your-server>:3400` in a browser.
 
 ## Authentication
 

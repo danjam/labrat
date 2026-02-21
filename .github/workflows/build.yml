@@ -2,6 +2,8 @@ name: Build and Push
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 1' # Every Monday at 06:00 UTC
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}

@@ -1,5 +1,8 @@
 FROM debian:bookworm-slim
 
+LABEL org.opencontainers.image.source=https://github.com/danjam/labrat
+LABEL org.opencontainers.image.description="Claude Code + Yep Anywhere for homelab remote access"
+
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install base dependencies + gosu for entrypoint privilege drop

@@ -41,7 +41,6 @@ The `claude-home` named volume persists auth state and session history at `/home
 
 ## Key Files
 
-- `IMPLEMENT.md` — the full implementation spec (source of truth for all design decisions)
 - `Dockerfile` — container image definition
 - `entrypoint.sh` — secrets resolution, permission fixes, auth detection, privilege drop
 - `docker-compose.yml` — local build + run config

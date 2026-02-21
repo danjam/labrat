@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="labrat.webp" alt="Labrat" width="200">
+</p>
+
 # Labrat
 
 Claude Code + [Yep Anywhere](https://github.com/kzahel/yepanywhere) in Docker for homelab remote access. Access Claude Code from any device via a web browser.
@@ -46,7 +50,6 @@ The starter config includes:
 
 - **Context7** — documentation lookup
 - **Brave Search** — web search
-- **GitHub** — issues, PRs, repository access
 - **SSH Session** — persistent SSH with async commands and SFTP
 
 The `gh` CLI is also installed and authenticates via `GITHUB_TOKEN`.
@@ -71,7 +74,7 @@ Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `GITHUB_TOKEN`, `CONTEXT7_API_
 |----------|---------|-------------|
 | `PORT` | `3400` | Host port for Yep Anywhere |
 | `ANTHROPIC_API_KEY` | | Claude API key (or use OAuth) |
-| `GITHUB_TOKEN` | | GitHub PAT for `gh` CLI and GitHub MCP |
+| `GITHUB_TOKEN` | | GitHub PAT for `gh` CLI |
 | `CONTEXT7_API_KEY` | | Context7 MCP server |
 | `BRAVE_API_KEY` | | Brave Search MCP server |
 | `GEMINI_API_KEY` | | Gemini MCP server |

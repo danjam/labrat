@@ -51,6 +51,10 @@ RUN curl -fsSL https://claude.ai/install.sh | bash
 USER root
 RUN cp /home/claude/.local/bin/claude /usr/local/bin/claude
 
+# Disable auto-updates — version is pinned to the image build.
+# Rebuild the image to update Claude Code.
+ENV CLAUDE_AUTO_UPDATE=0
+
 # Install Yep Anywhere (web UI for Claude Code sessions)
 # https://github.com/kzahel/yepanywhere
 RUN npm install -g yepanywhere

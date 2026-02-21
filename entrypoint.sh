@@ -23,6 +23,17 @@ for base_var in "${SECRETS_WHITELIST[@]}"; do
     fi
 done
 
+# --- Copy starter config if not already present ---
+WORKSPACE="/home/claude/workspace"
+for example_file in "$WORKSPACE"/*.example "$WORKSPACE"/.*.example; do
+    [ -f "$example_file" ] || continue
+    live_file="${example_file%.example}"
+    if [ ! -f "$live_file" ]; then
+        cp "$example_file" "$live_file"
+        echo "Created $(basename "$live_file") from example template."
+    fi
+done
+
 # --- Fix volume permissions ---
 # Named volumes and bind mounts may be owned by root on first run.
 # Ensure the claude user can write to its home directory and workspace.

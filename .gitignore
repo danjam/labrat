@@ -1,0 +1,7 @@
+.claude/
+.mcp.json
+.vscode/
+node_modules/
+dist/
+.env
+workspace/

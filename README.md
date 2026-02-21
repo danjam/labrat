@@ -20,7 +20,7 @@ Open `http://<your-server>:3400` in a browser.
 
 **API key:** Set `ANTHROPIC_API_KEY` in `.env`. Done.
 
-**Claude Pro/Max (OAuth):** Leave `ANTHROPIC_API_KEY` blank, start the container, open the Yep Anywhere UI, start a session, and use `/login` to authenticate. This is a one-time flow — OAuth tokens persist in the `claude-home` volume across restarts.
+**Claude Pro/Max (OAuth):** Leave `ANTHROPIC_API_KEY` blank, start the container, open the Yep Anywhere UI, start a session, and use `/login` to authenticate. This is a one-time flow — OAuth tokens persist in the `claude-home` volume across restarts. After completing `/login`, wait a few seconds before sending messages — Claude Code may briefly respond with "Not logged in" while it picks up the new credentials.
 
 ## Workspace
 

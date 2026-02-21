@@ -69,9 +69,9 @@ WORKDIR /home/claude/workspace
 # Yep Anywhere default port
 EXPOSE 3400
 
-# Healthcheck — Yep Anywhere serves HTTP on port 3400
+# Healthcheck — verify both Yep Anywhere and Claude Code are functional
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:3400/ || exit 1
+    CMD curl -f http://localhost:3400/ && claude --version > /dev/null || exit 1
 
 # Entrypoint runs as root to fix volume permissions, then drops to claude via gosu
 ENTRYPOINT ["entrypoint.sh"]

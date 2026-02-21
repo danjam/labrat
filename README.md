@@ -9,10 +9,10 @@ Claude Code + [Yep Anywhere](https://github.com/kzahel/yepanywhere) in Docker fo
 ## Quick Start
 
 ```bash
-git clone <repo-url> && cd labrat
-cp .env.example .env          # Fill in API keys
-vim workspace/CLAUDE.md       # Customize instructions for your homelab
-vim workspace/.mcp.json       # Configure MCP servers
+git clone https://github.com/danjam/labrat.git && cd labrat
+cp .env.example .env                          # Fill in API keys
+cp workspace/CLAUDE.md.example workspace/CLAUDE.md      # Customize for your homelab
+cp workspace/.mcp.json.example workspace/.mcp.json      # Configure MCP servers
 docker compose up -d --build
 ```
 

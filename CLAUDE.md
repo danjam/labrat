@@ -33,8 +33,8 @@ Key design decisions:
 ## Configuration
 
 All operator config lives in the bind-mounted `./workspace/` directory:
-- `workspace/CLAUDE.md` — instructions for Claude Code sessions
-- `workspace/.mcp.json` — MCP server config (project-level, read by Claude Code automatically)
+- `workspace/CLAUDE.md.example` — starter instructions (user copies to `workspace/CLAUDE.md`)
+- `workspace/.mcp.json.example` — starter MCP config (user copies to `workspace/.mcp.json`)
 - `.env` — API keys and port config (not committed)
 
 The `claude-home` named volume persists auth state and session history at `/home/claude`.

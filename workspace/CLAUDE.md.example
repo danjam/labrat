@@ -7,3 +7,33 @@ You manage infrastructure via MCP servers (SSH, GitHub, etc.) — not by running
 ## Available MCP servers
 
 Check .mcp.json in this directory for configured MCP servers and their capabilities.
+
+## Infrastructure
+
+<!-- List your hosts here so Claude knows what it's managing. Example: -->
+<!-- All hosts: Ubuntu 24.04 LTS, SSH user `yourname`. -->
+
+### host1 (192.168.1.x)
+- **Role:** e.g. Application server
+- **Tailscale:** 100.x.x.x
+- **Docker containers:**
+  - traefik (reverse proxy)
+  - ...
+
+## Conventions
+
+### Domain & routing
+- **Domain:** `example.com`
+- **DNS:** e.g. Cloudflare
+- **Subdomains:** `{service}.example.com`
+- **TLS:** e.g. Let's Encrypt via DNS-01 challenge
+
+### Docker compose structure
+- Stack location: e.g. `/opt/stacks/{service}/compose.yaml`
+- Secrets: e.g. stored as files, mounted via Docker secrets
+- Timezone: e.g. `Europe/London`
+
+### This assistant (labrat)
+- Runs from `/opt/stacks/labrat/` on host1
+- Workspace mounted at `./workspace:/home/labrat/workspace`
+- Agent data persisted via `labrat-data` Docker volume

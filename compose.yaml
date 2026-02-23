@@ -1,25 +1,26 @@
 services:
-  claude:
+  yep:
     build: .
     ports:
       - "${PORT:-3400}:3400"
     volumes:
-      # Persist Claude Code auth, session history, and Yep Anywhere data
-      - claude-home:/home/claude
-      # Workspace — CLAUDE.md, .mcp.json, and any files Claude needs
-      - ./workspace:/home/claude/workspace
+      # Persist agent auth, session history, and Yep Anywhere data
+      - labrat-data:/home/labrat
+      # Workspace — CLAUDE.md, GEMINI.md, .mcp.json, and working files
+      - ./workspace:/home/labrat/workspace
     environment:
+      # Agent API keys (at least one needed, or use OAuth for Claude)
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       # Yep Anywhere web UI password (required)
       - YEP_PASSWORD=${YEP_PASSWORD}
       # Allowed hostnames for Yep Anywhere (set when behind a reverse proxy)
       - ALLOWED_HOSTS=${ALLOWED_HOSTS:-}
-      # MCP server API keys (referenced via ${VAR} in workspace/.mcp.json)
+      # Tool and MCP server keys
       - CONTEXT7_API_KEY=${CONTEXT7_API_KEY:-}
       - BRAVE_API_KEY=${BRAVE_API_KEY:-}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
     restart: unless-stopped
 
 volumes:
-  claude-home:
+  labrat-data:

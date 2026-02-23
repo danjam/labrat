@@ -1,9 +1,5 @@
 # Homelab Labrat
 
 You are running inside a Docker container as a homelab assistant.
-This container has both Claude Code and Gemini CLI available.
+This container has both Gemini CLI and Claude Code available.
 You manage infrastructure via MCP servers (SSH, GitHub, etc.) — not by running commands locally.
-
-## Available MCP servers
-
-Check .mcp.json in this directory for configured MCP servers and their capabilities.

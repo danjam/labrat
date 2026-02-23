@@ -38,7 +38,7 @@ We did a complete clean slate: deleted all projects in `~/.claude/projects/`, de
 
 On a brand new deployment (fresh volume), the first session is the OAuth `/login` flow via Yep Anywhere. At that point no projects exist, so the scanner falls back to `homedir()` and creates `-home-labrat`. The workspace project never gets established.
 
-**Fix implemented:** The entrypoint now creates `~/.claude/projects/-home-labrat-workspace/seed.jsonl` (no dot prefix — some globs skip dotfiles) containing `{"cwd":"/home/labrat/workspace"}`. On a fresh deploy there's no competing stale data, so the scanner should find the workspace project first and the client should use it as `projects[0]`. This needs testing with `docker compose down -v` and a full first-boot flow.
+**Fix implemented and verified:** The entrypoint creates `~/.claude/projects/-home-labrat-workspace/seed.jsonl` (no dot prefix — some globs skip dotfiles) containing `{"cwd":"/home/labrat/workspace"}`. Tested with `docker compose down -v` full clean start — workspace project is picked up correctly on first boot.
 
 **If the seed doesn't work:** The fallback is to add symlinks in the entrypoint (`ln -sf /home/labrat/workspace/.mcp.json /home/labrat/.mcp.json` etc.) plus a `.claudeignore` at `/home/labrat/` to prevent context pollution. Less clean but guaranteed to work.
 
@@ -105,5 +105,5 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 
 ## What's Left To Do
 
-- **Test fresh deploy with seed file** — `docker compose down -v`, full first-boot, verify workspace project is used
-- **If seed fails:** File Yep Anywhere issue requesting `DEFAULT_PROJECT_PATH` env var for Docker/headless use cases
+- **Gemini CLI model selection** — free tier API key can't access all models. Need to figure out default model config or document which plans work.
+- **Restore GHCR pull on orac** — add `image: ghcr.io/danjam/labrat:latest` back to override and trigger a GHCR build once satisfied with testing.

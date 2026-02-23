@@ -21,7 +21,8 @@ services:
       - ./workspace:/home/labrat/workspace
     environment:
       - YEP_PASSWORD=changeme
-      # - ANTHROPIC_API_KEY=sk-ant-...
+      # - ANTHROPIC_API_KEY=sk-ant-...          # API billing
+      # - CLAUDE_CODE_OAUTH_TOKEN=ak-ant-...   # Pro/Max subscription
       # - GEMINI_API_KEY=...
       # - GITHUB_TOKEN=ghp_...
       # - ALLOWED_HOSTS=labrat.example.com
@@ -51,9 +52,13 @@ docker compose up -d --build
 
 ### Claude Code
 
-**API key:** Set `ANTHROPIC_API_KEY` in `.env`. Done.
+Three options (pick one):
 
-**Claude Pro/Max (OAuth):** Leave `ANTHROPIC_API_KEY` blank, start the container, open the Yep Anywhere UI, start a Claude Code session, and use `/login` to authenticate. This is a one-time flow — OAuth tokens persist in the `labrat-data` volume across restarts. After completing `/login`, wait a few seconds before sending messages — Claude Code may briefly respond with "Not logged in" while it picks up the new credentials.
+**OAuth token (Pro/Max):** Run `claude setup-token` locally and set `CLAUDE_CODE_OAUTH_TOKEN` in `.env`. Uses your subscription — no API charges.
+
+**API key:** Set `ANTHROPIC_API_KEY` in `.env`. Billed as pay-as-you-go API usage.
+
+**Interactive login:** Leave both blank, start a Claude Code session in Yep Anywhere, and use `/login` to authenticate. Tokens persist in the `labrat-data` volume across restarts. After completing `/login`, wait a few seconds before sending messages — Claude Code may briefly respond with "Not logged in" while it picks up the new credentials.
 
 ### Gemini CLI
 
@@ -96,7 +101,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_API_KEY_FILE=/run/secrets/anthropic_api_key
 ```
 
-Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `GITHUB_TOKEN`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`, `YEP_PASSWORD`. To add more, edit the `SECRETS_WHITELIST` in `entrypoint.sh`.
+Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, `GEMINI_API_KEY`, `GITHUB_TOKEN`, `CONTEXT7_API_KEY`, `BRAVE_API_KEY`, `YEP_PASSWORD`. To add more, edit the `SECRETS_WHITELIST` in `entrypoint.sh`.
 
 ## Configuration
 
@@ -105,7 +110,8 @@ Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `GITHUB_TOKE
 | `PORT` | `3400` | Host port for Yep Anywhere |
 | `YEP_PASSWORD` | | **Required.** Password for the Yep Anywhere web UI |
 | `ALLOWED_HOSTS` | | Allowed hostnames when behind a reverse proxy |
-| `ANTHROPIC_API_KEY` | | Claude Code API key (or use OAuth) |
+| `ANTHROPIC_API_KEY` | | Claude Code API key (pay-as-you-go) |
+| `CLAUDE_CODE_OAUTH_TOKEN` | | Claude Code OAuth token (Pro/Max subscription) |
 | `GEMINI_API_KEY` | | Gemini CLI API key |
 | `GITHUB_TOKEN` | | GitHub PAT for `gh` CLI |
 | `CONTEXT7_API_KEY` | | Context7 MCP server |

@@ -5,6 +5,7 @@ set -e
 # Only resolve known secret variables to prevent arbitrary file reads.
 SECRETS_WHITELIST=(
     ANTHROPIC_API_KEY
+    CLAUDE_CODE_OAUTH_TOKEN
     GITHUB_TOKEN
     CONTEXT7_API_KEY
     BRAVE_API_KEY
@@ -94,12 +95,15 @@ echo "============================================"
 echo ""
 
 # Claude Code
-if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+if [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+    echo "  Claude Code:  OAuth token configured (Pro/Max)"
+elif [ -n "${ANTHROPIC_API_KEY:-}" ]; then
     echo "  Claude Code:  API key configured"
 else
-    echo "  Claude Code:  No API key"
-    echo "                Set ANTHROPIC_API_KEY in .env,"
-    echo "                or use /login in Yep (Pro/Max)"
+    echo "  Claude Code:  No credentials"
+    echo "                Set CLAUDE_CODE_OAUTH_TOKEN (Pro/Max),"
+    echo "                or ANTHROPIC_API_KEY (API) in .env,"
+    echo "                or use /login in Yep"
 fi
 echo ""
 

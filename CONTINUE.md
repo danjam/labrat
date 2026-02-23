@@ -87,7 +87,7 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 - Traefik reverse proxy with Cloudflare DNS challenge
 - `compose.override.yaml` has `image: ghcr.io/danjam/labrat:latest` + Traefik labels + SSH key mount (`${HOME}/.ssh:/home/labrat/.ssh:ro`)
 - `.env` has: `YEP_PASSWORD=pick-a-password`, `ALLOWED_HOSTS=labrat.dannyjames.net`, MCP API keys, `GITHUB_TOKEN`
-- User authenticates Claude via OAuth (Max plan), NOT API key
+- User authenticates Claude via `CLAUDE_CODE_OAUTH_TOKEN` (Max plan) or `/login` flow, NOT API key
 
 ## Key Files
 

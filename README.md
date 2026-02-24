@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="labrat.webp" alt="Labrat" width="200">
+  <img src="assets/labrat.webp" alt="Labrat" width="200">
 </p>
 
 # Labrat

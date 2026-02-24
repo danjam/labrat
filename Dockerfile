@@ -2,6 +2,8 @@ FROM debian:bookworm-slim
 
 LABEL org.opencontainers.image.source=https://github.com/danjam/labrat
 LABEL org.opencontainers.image.description="Claude Code + Yep Anywhere for homelab remote access"
+LABEL org.opencontainers.image.licenses=MIT
+LABEL org.opencontainers.image.vendor=danjam
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -73,8 +75,10 @@ WORKDIR /home/labrat/workspace
 EXPOSE 3400
 
 # Healthcheck — verify Yep Anywhere and Claude Code are functional
-HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:3400/ && claude --version > /dev/null || exit 1
+HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
+    CMD curl -fsS --max-time 3 http://localhost:3400/ >/dev/null 2>&1 \
+     && claude --version >/dev/null 2>&1 \
+     || exit 1
 
 # Entrypoint runs as root to fix volume permissions, then drops to labrat via gosu
 ENTRYPOINT ["entrypoint.sh"]

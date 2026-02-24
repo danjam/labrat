@@ -52,7 +52,7 @@ done
 # Named volumes and bind mounts may be owned by root on first run.
 # Ensure the labrat user can write to its home directory and workspace.
 chown labrat:labrat /home/labrat
-if [ -d /home/labrat/.claude ]; then
+if [ -d /home/labrat/.claude ] && [ "$(stat -c %u /home/labrat/.claude)" != "$PUID" ]; then
     chown -R labrat:labrat /home/labrat/.claude
 fi
 if [ -d /home/labrat/workspace ]; then
@@ -64,7 +64,9 @@ fi
 # On a fresh volume this directory doesn't exist, so the FileWatcher
 # skips it and the UI shows no projects.
 mkdir -p /home/labrat/.claude/projects
-chown -R labrat:labrat /home/labrat/.claude
+if [ "$(stat -c %u /home/labrat/.claude)" != "$PUID" ]; then
+    chown -R labrat:labrat /home/labrat/.claude
+fi
 
 # --- Bootstrap Claude Code onboarding ---
 # Pre-seed the onboarding flag so Claude Code skips the interactive

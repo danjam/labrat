@@ -24,6 +24,7 @@ services:
       - BRAVE_API_KEY=${BRAVE_API_KEY:-}
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+    init: true
     restart: unless-stopped
 
 volumes:

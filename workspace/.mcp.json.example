@@ -12,6 +12,14 @@
         "BRAVE_API_KEY": "${BRAVE_API_KEY}"
       }
     },
+    "gemini": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "github:danjam/mcp-server-gemini"],
+      "env": {
+        "GEMINI_API_KEY": "${GEMINI_API_KEY}"
+      }
+    },
     "ssh-session": {
       "type": "stdio",
       "command": "uvx",

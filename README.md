@@ -4,7 +4,7 @@
 
 # Labrat
 
-AI coding agents (Claude Code + Gemini CLI) with [Yep Anywhere](https://github.com/kzahel/yepanywhere) in Docker for homelab remote access. Access your agents from any device via a web browser.
+Claude Code + [Yep Anywhere](https://github.com/kzahel/yepanywhere) in Docker for homelab remote access. Access Claude Code from any device via a web browser.
 
 ## Quick Start
 
@@ -23,7 +23,6 @@ services:
       - YEP_PASSWORD=changeme
       # - ANTHROPIC_API_KEY=sk-ant-...          # API billing
       # - CLAUDE_CODE_OAUTH_TOKEN=ak-ant-...   # Pro/Max subscription
-      # - GEMINI_API_KEY=...
       # - GITHUB_TOKEN=ghp_...
       # - ALLOWED_HOSTS=labrat.example.com
     restart: unless-stopped
@@ -60,18 +59,13 @@ Three options (pick one):
 
 **Interactive login:** Leave both blank, start a Claude Code session in Yep Anywhere, and use `/login` to authenticate. Tokens persist in the `labrat-data` volume across restarts. After completing `/login`, wait a few seconds before sending messages — Claude Code may briefly respond with "Not logged in" while it picks up the new credentials.
 
-### Gemini CLI
-
-Set `GEMINI_API_KEY` in `.env`. Get a key at [Google AI Studio](https://aistudio.google.com/apikey).
-
 ## Workspace
 
-All AI agent project config lives in `./workspace/`, bind-mounted into the container:
+All Claude Code project config lives in `./workspace/`, bind-mounted into the container:
 
 | File | Purpose |
 |------|---------|
 | `CLAUDE.md` | Instructions and context for Claude Code sessions |
-| `GEMINI.md` | Instructions and context for Gemini CLI sessions |
 | `.mcp.json` | MCP server configuration (read by Claude Code automatically) |
 | `.claude/` | Project settings (created by Claude Code at runtime) |
 
@@ -112,13 +106,12 @@ Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, `GE
 | `ALLOWED_HOSTS` | | Allowed hostnames when behind a reverse proxy |
 | `ANTHROPIC_API_KEY` | | Claude Code API key (pay-as-you-go) |
 | `CLAUDE_CODE_OAUTH_TOKEN` | | Claude Code OAuth token (Pro/Max subscription) |
-| `GEMINI_API_KEY` | | Gemini CLI API key |
 | `GITHUB_TOKEN` | | GitHub PAT for `gh` CLI |
+| `GEMINI_API_KEY` | | Gemini MCP server API key |
 | `CONTEXT7_API_KEY` | | Context7 MCP server |
 | `BRAVE_API_KEY` | | Brave Search MCP server |
 
 ## Links
 
 - [Claude Code docs](https://code.claude.com/docs/en/setup)
-- [Gemini CLI](https://github.com/google-gemini/gemini-cli)
 - [Yep Anywhere](https://github.com/kzahel/yepanywhere)

@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim
 
 LABEL org.opencontainers.image.source=https://github.com/danjam/labrat
-LABEL org.opencontainers.image.description="AI coding agents (Claude Code + Gemini CLI) with Yep Anywhere for homelab remote access"
+LABEL org.opencontainers.image.description="Claude Code + Yep Anywhere for homelab remote access"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -59,11 +59,6 @@ RUN cp /home/labrat/.local/bin/claude /usr/local/bin/claude
 # Rebuild the image to update Claude Code.
 ENV CLAUDE_AUTO_UPDATE=0
 
-# Install Gemini CLI (Google's AI coding assistant)
-# Auth via GEMINI_API_KEY env var — no interactive onboarding needed.
-# https://github.com/google-gemini/gemini-cli
-RUN npm install -g @google/gemini-cli
-
 # Install Yep Anywhere (web UI for AI coding agent sessions)
 # https://github.com/kzahel/yepanywhere
 RUN npm install -g yepanywhere
@@ -77,9 +72,9 @@ WORKDIR /home/labrat/workspace
 # Yep Anywhere default port
 EXPOSE 3400
 
-# Healthcheck — verify Yep Anywhere, Claude Code, and Gemini CLI are functional
+# Healthcheck — verify Yep Anywhere and Claude Code are functional
 HEALTHCHECK --interval=15s --timeout=5s --start-period=10s --retries=3 \
-    CMD curl -f http://localhost:3400/ && claude --version > /dev/null && gemini --version > /dev/null || exit 1
+    CMD curl -f http://localhost:3400/ && claude --version > /dev/null || exit 1
 
 # Entrypoint runs as root to fix volume permissions, then drops to labrat via gosu
 ENTRYPOINT ["entrypoint.sh"]

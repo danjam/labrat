@@ -12,7 +12,6 @@ services:
       # Agent API keys (at least one needed, or use OAuth for Claude)
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - CLAUDE_CODE_OAUTH_TOKEN=${CLAUDE_CODE_OAUTH_TOKEN:-}
-      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       # Yep Anywhere web UI password (required)
       - YEP_PASSWORD=${YEP_PASSWORD}
       # Allowed hostnames for Yep Anywhere (set when behind a reverse proxy)
@@ -20,6 +19,7 @@ services:
       # Tool and MCP server keys
       - CONTEXT7_API_KEY=${CONTEXT7_API_KEY:-}
       - BRAVE_API_KEY=${BRAVE_API_KEY:-}
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
     restart: unless-stopped
 

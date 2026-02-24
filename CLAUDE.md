@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Labrat — a Docker container bundling AI coding agents (Claude Code + Gemini CLI) with Yep Anywhere (web UI) for homelab remote access. Public repo, published to GHCR at `ghcr.io/danjam/labrat`.
+Labrat — a Docker container bundling Claude Code + Yep Anywhere (web UI) for homelab remote access. Public repo, published to GHCR at `ghcr.io/danjam/labrat`.
 
 ## Build & Run
 
@@ -24,10 +24,9 @@ docker compose down -v               # Stop and remove volumes (resets auth/sess
 
 ## Architecture
 
-Single container, three main components sharing `/home/labrat`:
-- **Yep Anywhere** (Node.js web UI, port 3400) — manages AI coding agent sessions as child processes
+Single container, two main components sharing `/home/labrat`:
+- **Yep Anywhere** (Node.js web UI, port 3400) — manages Claude Code sessions as child processes
 - **Claude Code** (native binary) — Anthropic's AI coding assistant
-- **Gemini CLI** (npm global) — Google's AI coding assistant
 
 The entrypoint (`entrypoint.sh`) runs as root to: resolve `_FILE` secrets from a whitelist, fix volume permissions via `chown`, bootstrap Claude Code onboarding, seed the workspace project, check agent auth status, then drop to the `labrat` user via `gosu` before exec'ing the CMD.
 
@@ -48,7 +47,6 @@ Key design decisions:
 
 All operator config lives in the bind-mounted `./workspace/` directory:
 - `workspace/CLAUDE.md.example` — starter instructions for Claude Code (user copies to `workspace/CLAUDE.md`)
-- `workspace/GEMINI.md.example` — starter instructions for Gemini CLI (user copies to `workspace/GEMINI.md`)
 - `workspace/.mcp.json.example` — starter MCP config (user copies to `workspace/.mcp.json`)
 - `.env` — API keys and port config (not committed)
 

@@ -106,16 +106,6 @@ else
     echo "                or use /login in Yep"
 fi
 echo ""
-
-# Gemini CLI
-if [ -n "${GEMINI_API_KEY:-}" ]; then
-    echo "  Gemini CLI:   API key configured"
-else
-    echo "  Gemini CLI:   No API key"
-    echo "                Set GEMINI_API_KEY in .env"
-fi
-
-echo ""
 echo "============================================"
 echo ""
 

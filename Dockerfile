@@ -61,7 +61,7 @@ ENV CLAUDE_AUTO_UPDATE=0
 
 # Install Yep Anywhere (web UI for AI coding agent sessions)
 # https://github.com/kzahel/yepanywhere
-RUN npm install -g yepanywhere
+RUN npm install -g yepanywhere && npm cache clean --force
 
 # Copy entrypoint script
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh

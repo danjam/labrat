@@ -19,11 +19,23 @@ for base_var in "${SECRETS_WHITELIST[@]}"; do
     if [ -n "$file_path" ]; then
         if [ -f "$file_path" ]; then
             export "$base_var"="$(cat "$file_path")"
+            unset "$file_var"
         else
             echo "WARNING: ${file_var}=${file_path} specified but file does not exist" >&2
         fi
     fi
 done
+
+# --- Adjust labrat UID/GID to match host (LinuxServer.io convention) ---
+PUID="${PUID:-1000}"
+PGID="${PGID:-1000}"
+
+if [ "$(id -g labrat)" != "$PGID" ]; then
+    groupmod -g "$PGID" labrat
+fi
+if [ "$(id -u labrat)" != "$PUID" ]; then
+    usermod -u "$PUID" -o labrat
+fi
 
 # --- Copy starter config if not already present ---
 WORKSPACE="/home/labrat/workspace"

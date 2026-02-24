@@ -6,9 +6,12 @@ services:
     volumes:
       # Persist agent auth, session history, and Yep Anywhere data
       - labrat-data:/home/labrat
-      # Workspace — CLAUDE.md, GEMINI.md, .mcp.json, and working files
+      # Workspace — CLAUDE.md, .mcp.json, and working files
       - ./workspace:/home/labrat/workspace
     environment:
+      # Container user UID/GID — match your host user to avoid permission issues
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
       # Agent API keys (at least one needed, or use OAuth for Claude)
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
       - CLAUDE_CODE_OAUTH_TOKEN=${CLAUDE_CODE_OAUTH_TOKEN:-}

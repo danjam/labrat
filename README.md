@@ -21,6 +21,8 @@ services:
       - ./workspace:/home/labrat/workspace
     environment:
       - YEP_PASSWORD=changeme
+      # - PUID=1000                              # Match host user UID
+      # - PGID=1000                              # Match host group GID
       # - ANTHROPIC_API_KEY=sk-ant-...          # API billing
       # - CLAUDE_CODE_OAUTH_TOKEN=ak-ant-...   # Pro/Max subscription
       # - GITHUB_TOKEN=ghp_...
@@ -69,7 +71,9 @@ All Claude Code project config lives in `./workspace/`, bind-mounted into the co
 | `.mcp.json` | MCP server configuration (read by Claude Code automatically) |
 | `.claude/` | Project settings (created by Claude Code at runtime) |
 
-Edit these directly on the host. Changes take effect on the next session.
+On first run the entrypoint auto-creates `CLAUDE.md` and `.mcp.json` from the bundled `.example` templates if they don't already exist. Edit them directly on the host — changes take effect on the next session.
+
+On first run the entrypoint also installs a set of Claude Code plugins into `workspace/.claude/settings.json`: `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, and `ralph-loop`. These are project-scoped and persist in the workspace bind mount.
 
 ## MCP Servers
 
@@ -79,6 +83,7 @@ The starter config includes:
 
 - **Context7** — documentation lookup
 - **Brave Search** — web search
+- **Gemini** — Google Gemini as a second AI model (requires `GEMINI_API_KEY`). Defaults to `gemini-2.5-flash`. Note: `gemini-2.5-pro` appears available but throws usage errors on the free API tier — a paid plan is required to use it.
 - **SSH Session** — persistent SSH with async commands and SFTP
 
 The `gh` CLI is also installed and authenticates via `GITHUB_TOKEN`.
@@ -102,6 +107,8 @@ Supported `_FILE` variables: `ANTHROPIC_API_KEY`, `CLAUDE_CODE_OAUTH_TOKEN`, `GE
 | Variable | Default | Description |
 |----------|---------|-------------|
 | `PORT` | `3400` | Host port for Yep Anywhere |
+| `PUID` | `1000` | Container user UID — match your host user for bind mount permissions |
+| `PGID` | `1000` | Container group GID — match your host group for bind mount permissions |
 | `YEP_PASSWORD` | | **Required.** Password for the Yep Anywhere web UI |
 | `ALLOWED_HOSTS` | | Allowed hostnames when behind a reverse proxy |
 | `ANTHROPIC_API_KEY` | | Claude Code API key (pay-as-you-go) |

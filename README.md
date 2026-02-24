@@ -19,14 +19,16 @@ services:
     volumes:
       - labrat-data:/home/labrat
       - ./workspace:/home/labrat/workspace
+      # - ~/.ssh:/home/labrat/.ssh:ro          # SSH keys (for MCP SSH server)
     environment:
       - YEP_PASSWORD=changeme
-      # - PUID=1000                              # Match host user UID
-      # - PGID=1000                              # Match host group GID
-      # - ANTHROPIC_API_KEY=sk-ant-...          # API billing
+      # - PUID=1000                            # Match host user UID
+      # - PGID=1000                            # Match host group GID
+      # - ANTHROPIC_API_KEY=sk-ant-...         # API billing
       # - CLAUDE_CODE_OAUTH_TOKEN=ak-ant-...   # Pro/Max subscription
       # - GITHUB_TOKEN=ghp_...
       # - ALLOWED_HOSTS=labrat.example.com
+    init: true
     restart: unless-stopped
 
 volumes:

@@ -15,6 +15,11 @@ Labrat = Docker container bundling Claude Code with Yep Anywhere (web UI) for ho
 - **Workspace example files fleshed out** (`ffc3e2d`) — `CLAUDE.md.example` and `.mcp.json.example` now have generic homelab templates.
 - **Claude Code plugins installed via entrypoint** (`fb15216`) — on first run, installs `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, `ralph-loop` into `workspace/.claude/settings.json`.
 - **Documentation fixes** — README, CLAUDE.md, CONTINUE.md corrected for accuracy (Gemini, plugin install, auto-copy behavior, entrypoint steps).
+- **PUID/PGID support** — runtime UID/GID matching via LinuxServer.io convention, works with pre-built GHCR images.
+- **Build hardening** — npm cache clean, unset `_FILE` env vars after secret resolution, skip recursive chown when ownership matches, improved healthcheck.
+- **`init: true`** added to compose.yaml for zombie process reaping.
+- **MIT license** added, logo moved to `assets/`.
+- **OCI labels** — added license and vendor to Dockerfile.
 
 ## The Workspace Project Problem (SOLVED)
 

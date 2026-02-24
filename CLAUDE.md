@@ -20,6 +20,10 @@ docker compose up -d --build --force-recreate  # Rebuild from scratch
 docker compose logs -f               # Tail logs
 docker compose down                  # Stop
 docker compose down -v               # Stop and remove volumes (resets auth/sessions)
+
+# GHCR
+gh workflow run build.yml             # Trigger manual GHCR build
+gh run list --workflow=build.yml -L1  # Check build status
 ```
 
 ## Architecture
@@ -53,6 +57,14 @@ All operator config lives in the bind-mounted `./workspace/` directory:
 
 The `labrat-data` named volume persists auth state and session history at `/home/labrat`.
 
+## Gotchas
+
+- **Always exec as labrat:** `docker exec -u labrat -it <container> claude` — running as root creates sessions under `/root/.claude/` which Yep never sees
+- **Volume overlays `/home/labrat`** — anything written there during build is hidden at runtime by the named volume. That's why the claude binary is copied to `/usr/local/bin/`.
+- **PUID/PGID** — entrypoint supports LinuxServer.io-style `PUID`/`PGID` env vars for bind mount permission matching
+- **`init: true`** — compose.yaml uses this to reap zombie processes from orphaned Claude Code sessions
+- **First boot is slow** — plugin installation and Yep auth setup run on first start only
+
 ## Key Files
 
 - `Dockerfile` — container image definition + OCI labels
@@ -60,3 +72,5 @@ The `labrat-data` named volume persists auth state and session history at `/home
 - `compose.yaml` — base compose (build + pull, volumes, env vars)
 - `compose.override.yaml` — deployment-specific overrides (gitignored)
 - `.github/workflows/build.yml` — GHCR publish (weekly + manual dispatch)
+- `.env.example` — template for environment variables
+- `LICENSE` — MIT

@@ -2,22 +2,21 @@
 
 ## What This Project Is
 
-Labrat = Docker container bundling AI coding agents (Claude Code + Gemini CLI) with Yep Anywhere (web UI) for homelab remote access. Repo: `github.com/danjam/labrat`.
+Labrat = Docker container bundling Claude Code with Yep Anywhere (web UI) for homelab remote access. Gemini is available as an MCP server tool, not a standalone CLI. Repo: `github.com/danjam/labrat`.
 
 ## Current State
 
-**Working.** Deployed on orac at `https://labrat.dannyjames.net` using GHCR image (`ghcr.io/danjam/labrat:latest`). MCP servers (Context7, Brave, SSH) all functional. Claude Code sessions running from correct workspace directory.
+**Working.** Deployed on orac at `https://labrat.dannyjames.net` using GHCR image (`ghcr.io/danjam/labrat:latest`). MCP servers (Context7, Brave, Gemini, SSH) all functional. Claude Code sessions running from correct workspace directory.
 
-### What Changed This Session
+### What Changed Recently
 
-- **GHCR publishing:** Weekly automated builds (Mondays 06:00 UTC) + manual dispatch. Date-based tags (`:2026-02-21`) plus `:latest`.
-- **Orac switched from build-from-source to GHCR pull.** `compose.override.yaml` now has `image: ghcr.io/danjam/labrat:latest`. Update with `docker compose pull && docker compose up -d`.
-- **README updated:** Quick start now shows pull-based `compose.yaml` example. Build-from-source moved to separate section. HTTPS/reverse proxy requirement clarified.
-- **OCI labels added to Dockerfile** for GitHub package linking.
-- **Release v0.3.19 created.**
-- **First GHCR build completed and verified.** Package is public.
+- **Gemini CLI removed** (`3492d09`) — free tier couldn't reliably access models. Gemini is now available only as an MCP server via `workspace/.mcp.json`.
+- **Gemini MCP added to `.mcp.json.example`** (`7fc04b4`) — uses `github:danjam/mcp-server-gemini`, requires `GEMINI_API_KEY`.
+- **Workspace example files fleshed out** (`ffc3e2d`) — `CLAUDE.md.example` and `.mcp.json.example` now have generic homelab templates.
+- **Claude Code plugins installed via entrypoint** (`fb15216`) — on first run, installs `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, `ralph-loop` into `workspace/.claude/settings.json`.
+- **Documentation fixes** — README, CLAUDE.md, CONTINUE.md corrected for accuracy (Gemini, plugin install, auto-copy behavior, entrypoint steps).
 
-## The Workspace Project Problem (PARTIALLY SOLVED)
+## The Workspace Project Problem (SOLVED)
 
 ### The Problem
 
@@ -72,10 +71,10 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 ## Architecture
 
 - **Base image:** `debian:bookworm-slim`
-- **Components:** Claude Code (native binary at `/usr/local/bin/claude`), Gemini CLI (npm global), Yep Anywhere (npm global), Node.js 22, Python 3 + uv, gh CLI, tmux
-- **Entrypoint runs as root:** resolves `_FILE` secrets, copies `.example` files, fixes volume permissions, bootstraps Claude Code onboarding, seeds workspace project, creates `.claude/projects/`, sets up Yep Anywhere auth, shows agent auth status, drops to `labrat` user via `gosu`
+- **Components:** Claude Code (native binary at `/usr/local/bin/claude`), Yep Anywhere (npm global), Node.js 22, Python 3 + uv, gh CLI, tmux; Gemini available via MCP server (not a local CLI)
+- **Entrypoint runs as root:** resolves `_FILE` secrets, copies `.example` files, fixes volume permissions, bootstraps Claude Code onboarding, seeds workspace project, installs Claude Code plugins, sets up Yep Anywhere auth, shows agent auth status, drops to `labrat` user via `gosu`
 - **Named volume `labrat-data`** at `/home/labrat` — persists auth, sessions, Yep Anywhere data
-- **Bind mount `./workspace`** — operator config (`CLAUDE.md`, `GEMINI.md`, `.mcp.json`)
+- **Bind mount `./workspace`** — operator config (`CLAUDE.md`, `.mcp.json`)
 - **GHCR image:** `ghcr.io/danjam/labrat:latest` — weekly rebuilds keep agents fresh
 - **CMD:** `yepanywhere --host 0.0.0.0`
 
@@ -94,16 +93,14 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 | File | Purpose |
 |------|---------|
 | `Dockerfile` | Image definition + OCI labels |
-| `entrypoint.sh` | Secrets, permissions, onboarding bootstrap, workspace seed, auth setup, privilege drop |
+| `entrypoint.sh` | Secrets, `.example` copy, permissions, onboarding bootstrap, workspace seed, plugin install, Yep auth setup, privilege drop |
 | `compose.yaml` | Base compose (build, volumes, env vars) |
 | `compose.override.yaml` | Deployment-specific (Traefik labels, GHCR image) — gitignored |
 | `.env.example` | Template for env vars |
 | `workspace/CLAUDE.md.example` | Starter Claude Code instructions |
-| `workspace/GEMINI.md.example` | Starter Gemini CLI instructions |
-| `workspace/.mcp.json.example` | Starter MCP config (Context7, Brave, SSH) |
+| `workspace/.mcp.json.example` | Starter MCP config (Context7, Brave, Gemini, SSH) |
 | `.github/workflows/build.yml` | GHCR publish — weekly + manual dispatch |
 
 ## What's Left To Do
 
-- **Gemini CLI model selection** — free tier API key can't access all models. Need to figure out default model config or document which plans work.
-- **Restore GHCR pull on orac** — add `image: ghcr.io/danjam/labrat:latest` back to override and trigger a GHCR build once satisfied with testing.
+Nothing currently outstanding.

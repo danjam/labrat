@@ -27,11 +27,12 @@ docker compose down -v               # Stop and remove volumes (resets auth/sess
 Single container, two main components sharing `/home/labrat`:
 - **Yep Anywhere** (Node.js web UI, port 3400) — manages Claude Code sessions as child processes
 - **Claude Code** (native binary) — Anthropic's AI coding assistant
+- **Gemini** — available as an MCP server tool (configured in `workspace/.mcp.json`), not a local CLI
 
-The entrypoint (`entrypoint.sh`) runs as root to: resolve `_FILE` secrets from a whitelist, fix volume permissions via `chown`, bootstrap Claude Code onboarding, seed the workspace project, check agent auth status, then drop to the `labrat` user via `gosu` before exec'ing the CMD.
+The entrypoint (`entrypoint.sh`) runs as root to: resolve `_FILE` secrets from a whitelist, copy `.example` starter config files, fix volume permissions via `chown`, bootstrap Claude Code onboarding, seed the workspace project, install Claude Code plugins, set up Yep Anywhere auth, check agent auth status, then drop to the `labrat` user via `gosu` before exec'ing the CMD.
 
 Key design decisions:
-- **No `USER` directive in Dockerfile** — entrypoint must start as root for volume permission fixes
+- **No final `USER` directive in Dockerfile** — entrypoint must start as root for volume permission fixes
 - **`gosu` not `sudo`** — purpose-built for Docker, no persistent privilege escalation
 - **`debian:bookworm-slim`** base — smaller image, reduced attack surface
 - **Whitelisted `_FILE` resolution** — only known secret vars are resolved, not arbitrary `*_FILE` env vars. Add new secrets to `SECRETS_WHITELIST` array in `entrypoint.sh`.
@@ -46,8 +47,8 @@ Key design decisions:
 ## Configuration
 
 All operator config lives in the bind-mounted `./workspace/` directory:
-- `workspace/CLAUDE.md.example` — starter instructions for Claude Code (user copies to `workspace/CLAUDE.md`)
-- `workspace/.mcp.json.example` — starter MCP config (user copies to `workspace/.mcp.json`)
+- `workspace/CLAUDE.md.example` — starter instructions for Claude Code (auto-copied to `workspace/CLAUDE.md` on first run if absent)
+- `workspace/.mcp.json.example` — starter MCP config (auto-copied to `workspace/.mcp.json` on first run if absent)
 - `.env` — API keys and port config (not committed)
 
 The `labrat-data` named volume persists auth state and session history at `/home/labrat`.
@@ -55,7 +56,7 @@ The `labrat-data` named volume persists auth state and session history at `/home
 ## Key Files
 
 - `Dockerfile` — container image definition + OCI labels
-- `entrypoint.sh` — secrets resolution, permission fixes, onboarding bootstrap, workspace seed, auth detection, privilege drop
+- `entrypoint.sh` — secrets resolution, `.example` copy, permission fixes, onboarding bootstrap, workspace seed, plugin install, Yep auth setup, privilege drop
 - `compose.yaml` — base compose (build + pull, volumes, env vars)
 - `compose.override.yaml` — deployment-specific overrides (gitignored)
 - `.github/workflows/build.yml` — GHCR publish (weekly + manual dispatch)

@@ -76,6 +76,20 @@ if [ ! -f "$SEED_FILE" ]; then
     chown -R labrat:labrat "$SEED_DIR"
 fi
 
+# --- Install Claude Code plugins (project scope — persists in workspace bind mount) ---
+# Only install if not already registered in workspace settings.
+CLAUDE_SETTINGS="$WORKSPACE/.claude/settings.json"
+if ! grep -q "claude-plugins-official" "$CLAUDE_SETTINGS" 2>/dev/null; then
+    echo "Installing Claude Code plugins..."
+    cd "$WORKSPACE"
+    gosu labrat claude plugin install claude-md-management@claude-plugins-official --scope project
+    gosu labrat claude plugin install code-review@claude-plugins-official --scope project
+    gosu labrat claude plugin install commit-commands@claude-plugins-official --scope project
+    gosu labrat claude plugin install pr-review-toolkit@claude-plugins-official --scope project
+    gosu labrat claude plugin install ralph-loop@claude-plugins-official --scope project
+    echo "Plugins installed."
+fi
+
 # --- Set up Yep Anywhere authentication ---
 YEP_AUTH_FILE="/home/labrat/.yep-anywhere/auth.json"
 if [ -z "${YEP_PASSWORD:-}" ]; then

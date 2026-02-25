@@ -44,8 +44,10 @@ Key design decisions:
 ## GHCR
 
 - Image: `ghcr.io/danjam/labrat`
-- Weekly automated rebuilds (Mondays 06:00 UTC) + manual dispatch
-- Tags: `:latest` + date-based (`:2026-02-21`)
+- Automated version-check every 6 hours — rebuilds only when Claude Code or Yep Anywhere release a new version (detected via GitHub Releases API)
+- Manual dispatch always triggers a build
+- Tags: `:latest` + version combo (`:claude-2.1.52-yep-0.4.3`)
+- Version labels: `dev.labrat.claude-version`, `dev.labrat.yep-version` (set at build time, read by check job via `crane`)
 - Workflow: `.github/workflows/build.yml`
 
 ## Configuration
@@ -71,6 +73,6 @@ The `labrat-data` named volume persists auth state and session history at `/home
 - `entrypoint.sh` — secrets resolution, `.example` copy, permission fixes, onboarding bootstrap, workspace seed, plugin install, Yep auth setup, privilege drop
 - `compose.yaml` — base compose (build + pull, volumes, env vars)
 - `compose.override.yaml` — deployment-specific overrides (gitignored)
-- `.github/workflows/build.yml` — GHCR publish (weekly + manual dispatch)
+- `.github/workflows/build.yml` — GHCR version check (every 6h) + conditional build
 - `.env.example` — template for environment variables
 - `LICENSE` — MIT

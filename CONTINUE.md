@@ -80,7 +80,7 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 - **Entrypoint runs as root:** resolves `_FILE` secrets, copies `.example` files, fixes volume permissions, bootstraps Claude Code onboarding, seeds workspace project, installs Claude Code plugins, sets up Yep Anywhere auth, shows agent auth status, drops to `labrat` user via `gosu`
 - **Named volume `labrat-data`** at `/home/labrat` — persists auth, sessions, Yep Anywhere data
 - **Bind mount `./workspace`** — operator config (`CLAUDE.md`, `.mcp.json`)
-- **GHCR image:** `ghcr.io/danjam/labrat:latest` — weekly rebuilds keep agents fresh
+- **GHCR image:** `ghcr.io/danjam/labrat:latest` — auto-rebuilds on upstream version changes (checked every 6h via GitHub Releases API)
 - **CMD:** `yepanywhere --host 0.0.0.0`
 
 ## Homelab Deployment (orac)
@@ -104,7 +104,7 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 | `.env.example` | Template for env vars |
 | `workspace/CLAUDE.md.example` | Starter Claude Code instructions |
 | `workspace/.mcp.json.example` | Starter MCP config (Context7, Brave, Gemini, SSH) |
-| `.github/workflows/build.yml` | GHCR publish — weekly + manual dispatch |
+| `.github/workflows/build.yml` | GHCR version check (every 6h) + conditional build |
 
 ## What's Left To Do
 

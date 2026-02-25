@@ -3,13 +3,81 @@ name: Build and Push
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 6 * * 1' # Every Monday at 06:00 UTC
+    - cron: '0 */6 * * *' # Every 6 hours
 
 env:
   IMAGE: ghcr.io/${{ github.repository }}
 
 jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      should_build: ${{ steps.compare.outputs.should_build }}
+      claude_version: ${{ steps.latest.outputs.claude }}
+      yep_version: ${{ steps.latest.outputs.yep }}
+
+    steps:
+      - name: Get latest upstream versions
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          CLAUDE=$(gh api repos/anthropics/claude-code/releases/latest --jq '.tag_name' | sed 's/^v//')
+          YEP=$(gh api repos/kzahel/yepanywhere/releases/latest --jq '.tag_name' | sed 's/^v//')
+
+          if [ -z "$CLAUDE" ] || [ -z "$YEP" ]; then
+            echo "::error::Failed to fetch upstream versions"
+            exit 1
+          fi
+
+          echo "claude=$CLAUDE" >> "$GITHUB_OUTPUT"
+          echo "yep=$YEP" >> "$GITHUB_OUTPUT"
+          echo "Latest upstream — Claude Code: $CLAUDE, Yep Anywhere: $YEP"
+
+      - name: Get current image versions
+        id: current
+        run: |
+          # Install crane for lightweight registry inspection (no full image pull)
+          CRANE_VERSION=v0.21.1
+          curl -sL "https://github.com/google/go-containerregistry/releases/download/${CRANE_VERSION}/go-containerregistry_Linux_x86_64.tar.gz" \
+            | tar -xz crane
+
+          # Read version labels from current :latest image config
+          LABELS=$(./crane config "${{ env.IMAGE }}:latest" 2>/dev/null | jq -r '.config.Labels // empty') || true
+
+          if [ -n "$LABELS" ]; then
+            CLAUDE=$(echo "$LABELS" | jq -r '."dev.labrat.claude-version" // "unknown"')
+            YEP=$(echo "$LABELS" | jq -r '."dev.labrat.yep-version" // "unknown"')
+          else
+            CLAUDE="unknown"
+            YEP="unknown"
+          fi
+
+          echo "claude=$CLAUDE" >> "$GITHUB_OUTPUT"
+          echo "yep=$YEP" >> "$GITHUB_OUTPUT"
+          echo "Current image — Claude Code: $CLAUDE, Yep Anywhere: $YEP"
+
+      - name: Compare versions
+        id: compare
+        run: |
+          LATEST_CLAUDE="${{ steps.latest.outputs.claude }}"
+          LATEST_YEP="${{ steps.latest.outputs.yep }}"
+          CURRENT_CLAUDE="${{ steps.current.outputs.claude }}"
+          CURRENT_YEP="${{ steps.current.outputs.yep }}"
+
+          echo "Claude Code: $CURRENT_CLAUDE → $LATEST_CLAUDE"
+          echo "Yep Anywhere: $CURRENT_YEP → $LATEST_YEP"
+
+          if [ "$LATEST_CLAUDE" != "$CURRENT_CLAUDE" ] || [ "$LATEST_YEP" != "$CURRENT_YEP" ]; then
+            echo "should_build=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Version change detected — triggering build"
+          else
+            echo "::notice::No version changes — skipping build"
+          fi
+
   build:
+    needs: check
+    if: needs.check.outputs.should_build == 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -24,14 +92,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get date tag
-        id: date
-        run: echo "tag=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
-
       - uses: docker/build-push-action@v6
         with:
           context: .
           push: true
           tags: |
             ${{ env.IMAGE }}:latest
-            ${{ env.IMAGE }}:${{ steps.date.outputs.tag }}
+            ${{ env.IMAGE }}:claude-${{ needs.check.outputs.claude_version }}-yep-${{ needs.check.outputs.yep_version }}
+          labels: |
+            dev.labrat.claude-version=${{ needs.check.outputs.claude_version }}
+            dev.labrat.yep-version=${{ needs.check.outputs.yep_version }}

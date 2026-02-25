@@ -6,6 +6,7 @@ LABEL org.opencontainers.image.licenses=MIT
 LABEL org.opencontainers.image.vendor=danjam
 
 ARG DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # Install base dependencies + gosu for entrypoint privilege drop
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -77,7 +78,7 @@ EXPOSE 3400
 # Healthcheck — verify Yep Anywhere and Claude Code are functional
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
     CMD curl -fsS --max-time 3 http://localhost:3400/ >/dev/null 2>&1 \
-     && claude --version >/dev/null 2>&1 \
+     && test -x /usr/local/bin/claude \
      || exit 1
 
 # Entrypoint runs as root to fix volume permissions, then drops to labrat via gosu

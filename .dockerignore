@@ -1,0 +1,10 @@
+.git
+docs
+assets
+workspace
+*.md
+.env*
+.mcp.json
+LICENSE
+compose*.yaml
+.github

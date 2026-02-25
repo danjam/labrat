@@ -56,7 +56,7 @@ if [ -d /home/labrat/.claude ] && [ "$(stat -c %u /home/labrat/.claude)" != "$PU
     chown -R labrat:labrat /home/labrat/.claude
 fi
 if [ -d /home/labrat/workspace ]; then
-    chown labrat:labrat /home/labrat/workspace
+    chown -R labrat:labrat /home/labrat/workspace
 fi
 
 # --- Ensure Claude Code projects directory exists ---

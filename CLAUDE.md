@@ -33,7 +33,9 @@ Single container, two main components sharing `/home/labrat`:
 - **Claude Code** (native binary) — Anthropic's AI coding assistant
 - **Gemini** — available as an MCP server tool (configured in `workspace/.mcp.json`), not a local CLI
 
-The entrypoint (`entrypoint.sh`) runs as root to: resolve `_FILE` secrets from a whitelist, copy `.example` starter config files, fix volume permissions via `chown`, bootstrap Claude Code onboarding, seed the workspace project, install Claude Code plugins, set up Yep Anywhere auth, check agent auth status, then drop to the `labrat` user via `gosu` before exec'ing the CMD.
+Installed toolchain: Node.js 22, Python 3 + uv/uvx, gh CLI, tmux, git, curl.
+
+The entrypoint (`entrypoint.sh`) runs as root to: resolve `_FILE` secrets from a whitelist, adjust PUID/PGID, copy `.example` starter config files, fix volume permissions via `chown`, ensure `~/.claude/projects/` exists, bootstrap Claude Code onboarding, seed the workspace project, install Claude Code plugins, set up Yep Anywhere auth, check agent auth status, then drop to the `labrat` user via `gosu` before exec'ing the CMD.
 
 Key design decisions:
 - **No final `USER` directive in Dockerfile** — entrypoint must start as root for volume permission fixes
@@ -64,6 +66,7 @@ Required env vars (see `.env.example`):
 - `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` — Claude Code auth (or use `/login` OAuth flow)
 - `YEP_PASSWORD` — Yep Anywhere login password
 - `ALLOWED_HOSTS` — hostnames for reverse proxy access
+- `PORT` — (optional) host port for Yep Anywhere (default: 3400)
 - `GEMINI_API_KEY`, `BRAVE_API_KEY`, `CONTEXT7_API_KEY` — (optional) MCP server keys
 - `GITHUB_TOKEN` — (optional) GitHub CLI auth
 

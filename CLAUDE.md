@@ -46,6 +46,7 @@ Key design decisions:
 - Image: `ghcr.io/danjam/labrat`
 - Automated version-check every 6 hours — rebuilds only when Claude Code or Yep Anywhere release a new version (detected via GitHub Releases API)
 - Manual dispatch always triggers a build
+- Pushing a `v*` tag also triggers a build and adds the tag to the image (e.g. `:v0.4.0`)
 - Tags: `:latest` + version combo (`:claude-2.1.52-yep-0.4.3`)
 - Version labels: `dev.labrat.claude-version`, `dev.labrat.yep-version` (set at build time, read by check job via `crane`)
 - Upstream versions: `gh api repos/anthropics/claude-code/releases/latest` and `gh api repos/kzahel/yepanywhere/releases/latest`
@@ -85,3 +86,5 @@ The `labrat-data` named volume persists auth state and session history at `/home
 - `.github/workflows/build.yml` — GHCR version check (every 6h) + conditional build
 - `.env.example` — template for environment variables
 - `LICENSE` — MIT
+- `docs/TODO.md` — task checklist
+- `docs/PROGRESS.md` — project history and solved problems

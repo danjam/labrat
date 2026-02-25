@@ -108,4 +108,4 @@ Running as root (the default) creates projects/sessions under `/root/.claude/` i
 
 ## What's Left To Do
 
-Nothing currently outstanding.
+See `docs/TODO.md` for current tasks.

@@ -90,19 +90,23 @@ if [ ! -f "$SEED_FILE" ]; then
     chown -R labrat:labrat "$SEED_DIR"
 fi
 
-# --- Install Claude Code plugins (project scope — persists in workspace bind mount) ---
-# Only install if not already registered in workspace settings.
-CLAUDE_SETTINGS="$WORKSPACE/.claude/settings.json"
-if ! grep -q "claude-plugins-official" "$CLAUDE_SETTINGS" 2>/dev/null; then
-    echo "Installing Claude Code plugins..."
-    cd "$WORKSPACE"
-    gosu labrat claude plugin install claude-md-management@claude-plugins-official --scope project
-    gosu labrat claude plugin install code-review@claude-plugins-official --scope project
-    gosu labrat claude plugin install commit-commands@claude-plugins-official --scope project
-    gosu labrat claude plugin install pr-review-toolkit@claude-plugins-official --scope project
-    gosu labrat claude plugin install ralph-loop@claude-plugins-official --scope project
-    echo "Plugins installed."
+# --- Register marketplace & install Claude Code plugins ---
+# Marketplace is not auto-added when CLAUDE_AUTO_UPDATE=0, so always ensure it's present.
+echo "Ensuring claude-plugins-official marketplace is registered..."
+if ! gosu labrat claude plugin marketplace list 2>/dev/null | grep -q "claude-plugins-official"; then
+    gosu labrat claude plugin marketplace add anthropics/claude-plugins-official
 fi
+
+# Install plugins (project scope — persists in workspace bind mount).
+# Always run — install is idempotent and safe when already present.
+echo "Installing Claude Code plugins..."
+cd "$WORKSPACE"
+gosu labrat claude plugin install claude-md-management@claude-plugins-official --scope project
+gosu labrat claude plugin install code-review@claude-plugins-official --scope project
+gosu labrat claude plugin install commit-commands@claude-plugins-official --scope project
+gosu labrat claude plugin install pr-review-toolkit@claude-plugins-official --scope project
+gosu labrat claude plugin install ralph-loop@claude-plugins-official --scope project
+echo "Plugins installed."
 
 # --- Set up Yep Anywhere authentication ---
 YEP_AUTH_FILE="/home/labrat/.yep-anywhere/auth.json"

@@ -75,7 +75,7 @@ All Claude Code project config lives in `./workspace/`, bind-mounted into the co
 
 On first run the entrypoint auto-creates `CLAUDE.md` and `.mcp.json` from the bundled `.example` templates if they don't already exist. Edit them directly on the host — changes take effect on the next session.
 
-On first run the entrypoint also installs a set of Claude Code plugins into `workspace/.claude/settings.json`: `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, and `ralph-loop`. These are project-scoped and persist in the workspace bind mount.
+The entrypoint also installs a set of Claude Code plugins into `workspace/.claude/settings.json` on every boot (idempotent): `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, and `ralph-loop`. These are project-scoped and persist in the workspace bind mount.
 
 ## MCP Servers
 

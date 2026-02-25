@@ -13,7 +13,7 @@ Labrat = Docker container bundling Claude Code with Yep Anywhere (web UI) for ho
 - **Gemini CLI removed** (`3492d09`) — free tier couldn't reliably access models. Gemini is now available only as an MCP server via `workspace/.mcp.json`.
 - **Gemini MCP added to `.mcp.json.example`** (`7fc04b4`) — uses `github:danjam/mcp-server-gemini`, requires `GEMINI_API_KEY`.
 - **Workspace example files fleshed out** (`ffc3e2d`) — `CLAUDE.md.example` and `.mcp.json.example` now have generic homelab templates.
-- **Claude Code plugins installed via entrypoint** (`fb15216`) — on first run, installs `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, `ralph-loop` into `workspace/.claude/settings.json`.
+- **Claude Code plugins installed via entrypoint** (`fb15216`) — installs `claude-md-management`, `code-review`, `commit-commands`, `pr-review-toolkit`, `ralph-loop` into `workspace/.claude/settings.json` on every boot (idempotent).
 - **Documentation fixes** — README, CLAUDE.md, CONTINUE.md corrected for accuracy (Gemini, plugin install, auto-copy behavior, entrypoint steps).
 - **PUID/PGID support** — runtime UID/GID matching via LinuxServer.io convention, works with pre-built GHCR images.
 - **Build hardening** — npm cache clean, unset `_FILE` env vars after secret resolution, skip recursive chown when ownership matches, improved healthcheck.

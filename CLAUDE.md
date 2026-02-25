@@ -14,7 +14,8 @@ docker compose pull && docker compose up -d
 
 # Build from source (development)
 docker compose up -d --build
-docker compose up -d --build --force-recreate  # Rebuild from scratch
+docker compose up -d --build --force-recreate  # Recreate container
+docker compose build --no-cache && docker compose up -d  # Rebuild without layer cache
 
 # Common
 docker compose logs -f               # Tail logs
@@ -53,6 +54,7 @@ Key design decisions:
 - Version labels: `dev.labrat.claude-version`, `dev.labrat.yep-version` (set at build time, read by check job via `crane`)
 - Upstream versions: `gh api repos/anthropics/claude-code/releases/latest` and `gh api repos/kzahel/yepanywhere/releases/latest`
 - **Do not use** `claude.ai/cli/LATEST_VERSION` (Cloudflare-blocked) or `@anthropic-ai/claude-code` npm (deprecated)
+- Build uses Buildx with GHA layer cache (`cache-from`/`cache-to: type=gha,mode=max`)
 - Workflow: `.github/workflows/build.yml`
 
 ## Configuration
@@ -78,7 +80,7 @@ The `labrat-data` named volume persists auth state and session history at `/home
 - **Volume overlays `/home/labrat`** — anything written there during build is hidden at runtime by the named volume. That's why the claude binary is copied to `/usr/local/bin/`.
 - **PUID/PGID** — entrypoint supports LinuxServer.io-style `PUID`/`PGID` env vars for bind mount permission matching
 - **`init: true`** — compose.yaml uses this to reap zombie processes from orphaned Claude Code sessions
-- **First boot is slow** — plugin installation and Yep auth setup run on first start only
+- **First boot is slow** — Yep auth setup runs on first start only; plugin install runs every boot (idempotent)
 
 ## Key Files
 
@@ -87,6 +89,7 @@ The `labrat-data` named volume persists auth state and session history at `/home
 - `compose.yaml` — base compose (build + pull, volumes, env vars)
 - `compose.override.yaml` — deployment-specific overrides (gitignored)
 - `.github/workflows/build.yml` — GHCR version check (every 6h) + conditional build
+- `.dockerignore` — excludes `.git`, docs, assets from build context
 - `.env.example` — template for environment variables
 - `LICENSE` — MIT
 - `docs/TODO.md` — task checklist

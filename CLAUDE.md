@@ -48,6 +48,8 @@ Key design decisions:
 - Manual dispatch always triggers a build
 - Tags: `:latest` + version combo (`:claude-2.1.52-yep-0.4.3`)
 - Version labels: `dev.labrat.claude-version`, `dev.labrat.yep-version` (set at build time, read by check job via `crane`)
+- Upstream versions: `gh api repos/anthropics/claude-code/releases/latest` and `gh api repos/kzahel/yepanywhere/releases/latest`
+- **Do not use** `claude.ai/cli/LATEST_VERSION` (Cloudflare-blocked) or `@anthropic-ai/claude-code` npm (deprecated)
 - Workflow: `.github/workflows/build.yml`
 
 ## Configuration
@@ -56,6 +58,13 @@ All operator config lives in the bind-mounted `./workspace/` directory:
 - `workspace/CLAUDE.md.example` — starter instructions for Claude Code (auto-copied to `workspace/CLAUDE.md` on first run if absent)
 - `workspace/.mcp.json.example` — starter MCP config (auto-copied to `workspace/.mcp.json` on first run if absent)
 - `.env` — API keys and port config (not committed)
+
+Required env vars (see `.env.example`):
+- `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` — Claude Code auth (or use `/login` OAuth flow)
+- `YEP_PASSWORD` — Yep Anywhere login password
+- `ALLOWED_HOSTS` — hostnames for reverse proxy access
+- `GEMINI_API_KEY`, `BRAVE_API_KEY`, `CONTEXT7_API_KEY` — (optional) MCP server keys
+- `GITHUB_TOKEN` — (optional) GitHub CLI auth
 
 The `labrat-data` named volume persists auth state and session history at `/home/labrat`.
 

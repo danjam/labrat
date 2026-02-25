@@ -2,6 +2,9 @@ name: Build and Push
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
   schedule:
     - cron: '0 */6 * * *' # Every 6 hours
 
@@ -77,7 +80,10 @@ jobs:
 
   build:
     needs: check
-    if: needs.check.outputs.should_build == 'true' || github.event_name == 'workflow_dispatch'
+    if: >-
+      needs.check.outputs.should_build == 'true'
+      || github.event_name == 'workflow_dispatch'
+      || startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -99,6 +105,7 @@ jobs:
           tags: |
             ${{ env.IMAGE }}:latest
             ${{ env.IMAGE }}:claude-${{ needs.check.outputs.claude_version }}-yep-${{ needs.check.outputs.yep_version }}
+            ${{ startsWith(github.ref, 'refs/tags/v') && format('{0}:{1}', env.IMAGE, github.ref_name) || '' }}
           labels: |
             dev.labrat.claude-version=${{ needs.check.outputs.claude_version }}
             dev.labrat.yep-version=${{ needs.check.outputs.yep_version }}
